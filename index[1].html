@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SNGPRA Type-V Complaint Redressal Portal</title>
+    <style>
+      :root {
+        color: #1f2937;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f3f4f6;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #f3f4f6;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      .page {
+        min-height: 100vh;
+        padding: 24px;
+      }
+
+      .shell {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: grid;
+        gap: 24px;
+      }
+
+      .panel {
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.09);
+        padding: 24px;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        color: #1f2937;
+        font-size: clamp(2rem, 4vw, 2.5rem);
+        line-height: 1.1;
+      }
+
+      .muted {
+        color: #6b7280;
+      }
+
+      .mt-sm {
+        margin-top: 8px;
+      }
+
+      .button {
+        border: 0;
+        border-radius: 14px;
+        background: #111827;
+        color: #ffffff;
+        cursor: pointer;
+        padding: 12px 20px;
+        transition: opacity 160ms ease, transform 160ms ease;
+        white-space: nowrap;
+      }
+
+      .button:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .stat {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+        padding: 20px;
+      }
+
+      .stat strong {
+        display: block;
+        margin-top: 8px;
+        color: #111827;
+        font-size: 1.875rem;
+      }
+
+      .yellow {
+        color: #ca8a04 !important;
+      }
+
+      .blue {
+        color: #2563eb !important;
+      }
+
+      .green {
+        color: #16a34a !important;
+      }
+
+      .dashboard-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .controls {
+        display: flex;
+        gap: 12px;
+      }
+
+      .field {
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        min-height: 42px;
+        padding: 8px 14px;
+        background: #ffffff;
+      }
+
+      .search {
+        width: min(260px, 100%);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        min-width: 900px;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid #e5e7eb;
+        padding: 16px 12px;
+        text-align: left;
+        vertical-align: middle;
+      }
+
+      tbody tr:hover {
+        background: #f9fafb;
+      }
+
+      .pill {
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.875rem;
+        font-weight: 600;
+        min-height: 28px;
+        padding: 4px 12px;
+      }
+
+      .priority-high {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+
+      .priority-medium {
+        background: #ffedd5;
+        color: #c2410c;
+      }
+
+      .priority-low {
+        background: #f3f4f6;
+        color: #374151;
+      }
+
+      .status-pending {
+        background: #fef3c7;
+        color: #a16207;
+      }
+
+      .status-progress {
+        background: #dbeafe;
+        color: #1d4ed8;
+      }
+
+      .status-resolved {
+        background: #dcfce7;
+        color: #15803d;
+      }
+
+      .lower-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .form {
+        display: grid;
+        gap: 16px;
+      }
+
+      textarea.field {
+        min-height: 112px;
+        resize: vertical;
+      }
+
+      ul {
+        color: #4b5563;
+        line-height: 1.8;
+        margin: 0;
+        padding-left: 22px;
+      }
+
+      .contact {
+        background: #f3f4f6;
+        border-radius: 16px;
+        margin-top: 28px;
+        padding: 20px;
+      }
+
+      .small-button {
+        border-radius: 12px;
+        font-size: 0.875rem;
+        padding: 8px 14px;
+      }
+
+      .tower-dashboard {
+        overflow-x: auto;
+        padding-bottom: 8px;
+      }
+
+      .chart-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      .legend-item {
+        align-items: center;
+        color: #4b5563;
+        display: inline-flex;
+        font-weight: 600;
+        gap: 8px;
+      }
+
+      .legend-dot {
+        border-radius: 999px;
+        display: inline-block;
+        height: 12px;
+        width: 12px;
+      }
+
+      .chart {
+        align-items: end;
+        border-bottom: 1px solid #d1d5db;
+        border-left: 1px solid #d1d5db;
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(23, 58px);
+        min-height: 300px;
+        min-width: 1640px;
+        padding: 20px 14px 0;
+      }
+
+      .tower-bar-group {
+        align-items: end;
+        display: grid;
+        gap: 8px;
+        grid-template-rows: 220px auto;
+        justify-items: center;
+      }
+
+      .bars {
+        align-items: end;
+        display: flex;
+        gap: 5px;
+        height: 220px;
+      }
+
+      .bar {
+        border-radius: 8px 8px 0 0;
+        min-height: 4px;
+        position: relative;
+        width: 14px;
+      }
+
+      .bar span {
+        color: #111827;
+        font-size: 0.72rem;
+        font-weight: 700;
+        left: 50%;
+        position: absolute;
+        top: -18px;
+        transform: translateX(-50%);
+      }
+
+      .bar-pending {
+        background: #facc15;
+      }
+
+      .bar-progress {
+        background: #3b82f6;
+      }
+
+      .bar-resolved {
+        background: #22c55e;
+      }
+
+      .tower-axis-label {
+        color: #374151;
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+
+      .access-panel {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .access-fields {
+        display: flex;
+        flex: 1;
+        gap: 12px;
+        max-width: 620px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .message {
+        color: #374151;
+        font-weight: 600;
+        min-height: 22px;
+      }
+
+      .success {
+        color: #15803d;
+      }
+
+      .error {
+        color: #b91c1c;
+      }
+
+      @media (max-width: 820px) {
+        .page {
+          padding: 16px;
+        }
+
+        .header,
+        .access-panel,
+        .dashboard-head,
+        .access-fields,
+        .controls {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .stats,
+        .lower-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .button,
+        .search,
+        .access-fields,
+        select.field {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="shell">
+        <section class="panel header">
+          <div>
+            <h1>SNGPRA Type-V Complaint Redressal Portal</h1>
+            <p class="muted mt-sm">Manage and track resident complaints efficiently.</p>
+          </div>
+          <button class="button">+ Register New Complaint</button>
+        </section>
+
+        <section class="panel access-panel">
+          <div>
+            <h2>Admin Access</h2>
+            <p class="muted mt-sm">Complaint repository is visible only to the authorized email.</p>
+          </div>
+          <form class="access-fields" id="admin-access-form">
+            <input class="field" id="admin-email" type="email" placeholder="Admin email" />
+            <input class="field" id="admin-password" type="password" placeholder="Admin password" />
+            <button class="button" type="submit">View Repository</button>
+            <button class="button hidden" id="admin-logout" type="button">Hide Repository</button>
+          </form>
+          <p class="message" id="access-message"></p>
+        </section>
+
+        <section class="stats hidden" data-admin-only aria-label="Complaint summary">
+          <article class="stat">
+            <p class="muted">Total Complaints</p>
+            <strong id="total-count">0</strong>
+          </article>
+          <article class="stat">
+            <p class="muted">Pending</p>
+            <strong class="yellow" id="pending-count">0</strong>
+          </article>
+          <article class="stat">
+            <p class="muted">In Progress</p>
+            <strong class="blue" id="progress-count">0</strong>
+          </article>
+          <article class="stat">
+            <p class="muted">Resolved</p>
+            <strong class="green" id="resolved-count">0</strong>
+          </article>
+        </section>
+
+        <section class="panel hidden" data-admin-only>
+          <div class="dashboard-head">
+            <h2>Towerwise Dashboard</h2>
+            <p class="muted">Pendency by tower</p>
+          </div>
+          <div class="tower-dashboard" id="tower-dashboard"></div>
+        </section>
+
+        <section class="panel hidden" data-admin-only>
+          <div class="dashboard-head">
+            <h2>Complaint Repository</h2>
+            <div class="controls">
+              <input class="field search" id="complaint-search" type="text" placeholder="Search complaint..." />
+              <select class="field" id="status-filter">
+                <option>All Status</option>
+                <option>Pending</option>
+                <option>In Progress</option>
+                <option>Resolved</option>
+              </select>
+              <button class="button" id="download-excel" type="button">Download Excel</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Complaint ID</th>
+                  <th>Resident</th>
+                  <th>Tower No.</th>
+                  <th>Flat No.</th>
+                  <th>Category</th>
+                  <th>Issue</th>
+                  <th>Recurring</th>
+                  <th>Old Tracking ID</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Resolution Date</th>
+                  <th>Resolution Time</th>
+                  <th>Complaint Duration</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="complaints"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="lower-grid">
+          <article class="panel">
+            <h2>Register Complaint</h2>
+            <form class="form mt-sm" id="complaint-form">
+              <input class="field" id="resident-name" type="text" placeholder="Resident Name" required />
+              <select class="field" id="tower-number-options">
+                <option>Select Tower Number</option>
+              </select>
+              <select class="field" id="flat-number-options">
+                <option>Select Flat Number</option>
+              </select>
+              <select class="field" id="complaint-category" required>
+                <option>Select Category</option>
+                <option>Electrical</option>
+                <option>Plumbing</option>
+                <option>Housekeeping</option>
+                <option>Civil</option>
+                <option>Security</option>
+              </select>
+              <select class="field" id="complaint-priority" required>
+                <option>Select Priority</option>
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+              </select>
+              <select class="field" id="complaint-recurrence" required>
+                <option>Is this a recurrence of an old complaint?</option>
+                <option>No</option>
+                <option>Yes</option>
+              </select>
+              <input class="field hidden" id="old-tracking-id" type="text" placeholder="Old Tracking ID, e.g. CMP-101" />
+              <textarea class="field" id="complaint-issue" rows="4" placeholder="Describe the issue" required></textarea>
+              <button class="button" type="submit">Submit Complaint</button>
+              <p class="message" id="complaint-message"></p>
+            </form>
+          </article>
+
+          <article class="panel">
+            <h2>Complaint Guidelines</h2>
+            <ul class="mt-sm">
+              <li>Residents can register complaints online 24x7.</li>
+              <li>Each complaint receives a unique tracking ID.</li>
+              <li>Urgent complaints are prioritized automatically.</li>
+              <li>Residents receive updates on complaint status.</li>
+              <li>Resolved complaints can be rated for service quality.</li>
+            </ul>
+            <div class="contact">
+              <h3>Helpdesk Contact</h3>
+              <p class="muted mt-sm">Phone: +919116109727</p>
+              <p class="muted">Email: nbcc.type4.pkgva.851@gmail.com</p>
+            </div>
+          </article>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const flatNumbers = [
+        "0001",
+        "0002",
+        "0101",
+        "0102",
+        "0103",
+        "0104",
+        "0201",
+        "0202",
+        "0203",
+        "0204",
+        "0301",
+        "0302",
+        "0303",
+        "0304",
+        "0401",
+        "0402",
+        "0403",
+        "0404",
+        "0501",
+        "0502",
+        "0503",
+        "0504",
+        "0601",
+        "0602",
+        "0603",
+        "0604",
+        "0701",
+        "0702",
+        "0703",
+        "0704",
+        "0801",
+        "0802",
+        "0803",
+        "0804",
+        "0901",
+        "0902",
+        "0903",
+        "0904",
+        "1001",
+        "1002",
+        "1003",
+        "1004",
+        "1101",
+        "1102",
+        "1103",
+        "1104",
+      ];
+
+      const towerNumbers = Array.from({ length: 23 }, (_, index) => String(index + 1));
+
+      const ADMIN_EMAIL = "redevelopmentivb@gmail.com";
+      const ADMIN_PASSWORD = "admin123";
+      let adminCredentials = null;
+      let complaints = [];
+
+      const statusClass = {
+        Pending: "status-pending",
+        "In Progress": "status-progress",
+        Resolved: "status-resolved",
+      };
+
+      const priorityClass = {
+        High: "priority-high",
+        Medium: "priority-medium",
+        Low: "priority-low",
+      };
+
+      const adminHeaders = () => ({
+        "X-Admin-Email": adminCredentials?.email || "",
+        "X-Admin-Password": adminCredentials?.password || "",
+      });
+
+      const formatDate = (date) =>
+        date.toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+
+      const formatTime = (date) =>
+        date.toLocaleTimeString("en-IN", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        });
+
+      const parseComplaintDateTime = (dateText, timeText) => {
+        if (!dateText || !timeText || dateText === "-" || timeText === "-") {
+          return null;
+        }
+
+        const parsed = new Date(`${dateText} ${timeText}`);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+      };
+
+      const getComplaintDuration = (item) => {
+        const start = parseComplaintDateTime(item.date, item.time);
+        if (!start) {
+          return "-";
+        }
+
+        const end =
+          item.status === "Resolved"
+            ? parseComplaintDateTime(item.resolutionDate, item.resolutionTime) || new Date()
+            : new Date();
+        const totalMinutes = Math.max(0, Math.round((end - start) / 60000));
+        const days = Math.floor(totalMinutes / 1440);
+        const hours = Math.floor((totalMinutes % 1440) / 60);
+        const minutes = totalMinutes % 60;
+
+        if (days > 0) {
+          return `${days}d ${hours}h`;
+        }
+
+        if (hours > 0) {
+          return `${hours}h ${minutes}m`;
+        }
+
+        return `${minutes}m`;
+      };
+
+      const downloadComplaintsForExcel = async () => {
+        const response = await fetch("/api/complaints/export.csv", {
+          headers: adminHeaders(),
+        });
+
+        if (!response.ok) {
+          document.querySelector("#access-message").textContent = "Admin login is required before downloading.";
+          document.querySelector("#access-message").className = "message error";
+          return;
+        }
+
+        const blob = await response.blob();
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `sngpra-complaints-${new Date().toISOString().slice(0, 10)}.csv`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      };
+
+      const updateStats = () => {
+        document.querySelector("#total-count").textContent = complaints.length;
+        document.querySelector("#pending-count").textContent = complaints.filter((item) => item.status === "Pending").length;
+        document.querySelector("#progress-count").textContent = complaints.filter((item) => item.status === "In Progress").length;
+        document.querySelector("#resolved-count").textContent = complaints.filter((item) => item.status === "Resolved").length;
+      };
+
+      const renderTowerDashboard = () => {
+        const towerSummary = towerNumbers.map((tower) => {
+          const towerName = `T-${tower}`;
+          const towerComplaints = complaints.filter((item) => item.tower === towerName);
+          return {
+            tower: towerName,
+            pending: towerComplaints.filter((item) => item.status === "Pending").length,
+            inProgress: towerComplaints.filter((item) => item.status === "In Progress").length,
+            resolved: towerComplaints.filter((item) => item.status === "Resolved").length,
+          };
+        });
+        const maxCount = Math.max(1, ...towerSummary.flatMap((item) => [item.pending, item.inProgress, item.resolved]));
+        const barHeight = (count) => `${Math.max(count === 0 ? 0 : 8, (count / maxCount) * 210)}px`;
+
+        document.querySelector("#tower-dashboard").innerHTML = `
+          <div class="chart-legend">
+            <span class="legend-item"><span class="legend-dot bar-pending"></span>Pending</span>
+            <span class="legend-item"><span class="legend-dot bar-progress"></span>In Progress</span>
+            <span class="legend-item"><span class="legend-dot bar-resolved"></span>Resolved</span>
+          </div>
+          <div class="chart" aria-label="Towerwise complaint pendency bar chart">
+            ${towerSummary
+              .map(
+                (item) => `
+                  <div class="tower-bar-group">
+                    <div class="bars">
+                      <div class="bar bar-pending" title="${item.tower} Pending: ${item.pending}" style="height: ${barHeight(item.pending)}">
+                        <span>${item.pending}</span>
+                      </div>
+                      <div class="bar bar-progress" title="${item.tower} In Progress: ${item.inProgress}" style="height: ${barHeight(item.inProgress)}">
+                        <span>${item.inProgress}</span>
+                      </div>
+                      <div class="bar bar-resolved" title="${item.tower} Resolved: ${item.resolved}" style="height: ${barHeight(item.resolved)}">
+                        <span>${item.resolved}</span>
+                      </div>
+                    </div>
+                    <span class="tower-axis-label">${item.tower}</span>
+                  </div>
+                `
+              )
+              .join("")}
+          </div>
+        `;
+      };
+
+      const renderRepository = () => {
+        const searchTerm = document.querySelector("#complaint-search").value.trim().toLowerCase();
+        const selectedStatus = document.querySelector("#status-filter").value;
+        const visibleComplaints = complaints.filter((item) => {
+          const matchesStatus = selectedStatus === "All Status" || item.status === selectedStatus;
+          const matchesSearch = Object.values(item).join(" ").toLowerCase().includes(searchTerm);
+          return matchesStatus && matchesSearch;
+        });
+
+        document.querySelector("#complaints").innerHTML = visibleComplaints
+          .map(
+            (item) => `
+              <tr>
+                <td><strong>${item.id}</strong></td>
+                <td>${item.resident}</td>
+                <td>${item.tower}</td>
+                <td>${item.flat}</td>
+                <td>${item.category}</td>
+                <td>${item.issue}</td>
+                <td>${item.recurring || "No"}</td>
+                <td>${item.oldTrackingId || "-"}</td>
+                <td><span class="pill ${priorityClass[item.priority]}">${item.priority}</span></td>
+                <td><span class="pill ${statusClass[item.status]}">${item.status}</span></td>
+                <td>${item.date}</td>
+                <td>${item.time}</td>
+                <td>${item.resolutionDate}</td>
+                <td>${item.resolutionTime}</td>
+                <td>${getComplaintDuration(item)}</td>
+                <td>
+                  ${
+                    item.status === "Resolved"
+                      ? '<span class="pill status-resolved">Resolved</span>'
+                      : `<button class="button small-button resolve-button" type="button" data-id="${item.id}">Resolve</button>`
+                  }
+                </td>
+              </tr>
+            `
+          )
+          .join("");
+
+        updateStats();
+        renderTowerDashboard();
+      };
+
+      const setAdminVisibility = (isAdmin) => {
+        document.querySelectorAll("[data-admin-only]").forEach((section) => {
+          section.classList.toggle("hidden", !isAdmin);
+        });
+        document.querySelector("#admin-logout").classList.toggle("hidden", !isAdmin);
+        if (isAdmin) {
+          renderRepository();
+        }
+      };
+
+      document.querySelector("#flat-number-options").innerHTML += flatNumbers
+        .map((flat) => `<option value="${flat}">${flat}</option>`)
+        .join("");
+
+      document.querySelector("#tower-number-options").innerHTML += towerNumbers
+        .map((tower) => `<option value="${tower}">${tower}</option>`)
+        .join("");
+
+      document.querySelector("#complaint-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const resident = document.querySelector("#resident-name").value.trim();
+        const tower = document.querySelector("#tower-number-options").value;
+        const flat = document.querySelector("#flat-number-options").value;
+        const category = document.querySelector("#complaint-category").value;
+        const priority = document.querySelector("#complaint-priority").value;
+        const recurring = document.querySelector("#complaint-recurrence").value;
+        const oldTrackingId = document.querySelector("#old-tracking-id").value.trim().toUpperCase();
+        const issue = document.querySelector("#complaint-issue").value.trim();
+        const message = document.querySelector("#complaint-message");
+
+        if (
+          !resident ||
+          tower === "Select Tower Number" ||
+          flat === "Select Flat Number" ||
+          category === "Select Category" ||
+          priority === "Select Priority" ||
+          recurring === "Is this a recurrence of an old complaint?" ||
+          (recurring === "Yes" && !oldTrackingId) ||
+          !issue
+        ) {
+          message.textContent = "Please complete all complaint details.";
+          message.className = "message error";
+          return;
+        }
+
+        const response = await fetch("/api/complaints", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            resident,
+            tower,
+            flat,
+            category,
+            issue,
+            recurring,
+            oldTrackingId: recurring === "Yes" ? oldTrackingId : "-",
+            priority,
+          }),
+        });
+
+        if (!response.ok) {
+          message.textContent = "Complaint could not be submitted. Please try again.";
+          message.className = "message error";
+          return;
+        }
+
+        const newComplaint = await response.json();
+        if (adminCredentials) {
+          complaints.unshift(newComplaint);
+          renderRepository();
+        }
+        event.target.reset();
+        document.querySelector("#old-tracking-id").classList.add("hidden");
+        message.textContent = `Complaint submitted. Tracking ID: ${newComplaint.id}`;
+        message.className = "message success";
+      });
+
+      document.querySelector("#admin-access-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const email = document.querySelector("#admin-email").value.trim().toLowerCase();
+        const password = document.querySelector("#admin-password").value;
+        const message = document.querySelector("#access-message");
+
+        adminCredentials = { email, password };
+        const response = await fetch("/api/complaints", {
+          headers: adminHeaders(),
+        });
+
+        if (response.ok) {
+          complaints = await response.json();
+          setAdminVisibility(true);
+          message.textContent = "Repository access granted.";
+          message.className = "message success";
+        } else {
+          adminCredentials = null;
+          complaints = [];
+          setAdminVisibility(false);
+          message.textContent = "Only the authorized admin email and password can view the complaint repository.";
+          message.className = "message error";
+        }
+      });
+
+      document.querySelector("#admin-logout").addEventListener("click", () => {
+        adminCredentials = null;
+        complaints = [];
+        document.querySelector("#admin-email").value = "";
+        document.querySelector("#admin-password").value = "";
+        document.querySelector("#access-message").textContent = "Repository hidden.";
+        document.querySelector("#access-message").className = "message";
+        setAdminVisibility(false);
+      });
+
+      document.querySelector("#complaint-recurrence").addEventListener("change", (event) => {
+        const oldTrackingField = document.querySelector("#old-tracking-id");
+        const needsOldId = event.target.value === "Yes";
+        oldTrackingField.classList.toggle("hidden", !needsOldId);
+        oldTrackingField.required = needsOldId;
+        if (!needsOldId) {
+          oldTrackingField.value = "";
+        }
+      });
+
+      document.querySelector("#complaints").addEventListener("click", async (event) => {
+        if (!event.target.classList.contains("resolve-button")) {
+          return;
+        }
+
+        const complaintId = event.target.dataset.id;
+        const response = await fetch(`/api/complaints/${encodeURIComponent(complaintId)}/resolve`, {
+          method: "PATCH",
+          headers: adminHeaders(),
+        });
+
+        if (!response.ok) {
+          document.querySelector("#access-message").textContent = "Admin login is required to resolve complaints.";
+          document.querySelector("#access-message").className = "message error";
+          return;
+        }
+
+        const updatedComplaint = await response.json();
+        complaints = complaints.map((item) => (item.id === updatedComplaint.id ? updatedComplaint : item));
+        renderRepository();
+      });
+
+      document.querySelector("#complaint-search").addEventListener("input", renderRepository);
+      document.querySelector("#status-filter").addEventListener("change", renderRepository);
+      document.querySelector("#download-excel").addEventListener("click", downloadComplaintsForExcel);
+      setAdminVisibility(false);
+    </script>
+  </body>
+</html>
